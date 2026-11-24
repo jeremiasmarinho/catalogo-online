@@ -392,9 +392,6 @@ export default function AdminPage() {
               {busy ? <LoaderCircle size={16} className="animate-spin" /> : "Entrar no painel"}
             </button>
           </form>
-          <p className="mt-5 text-center text-[10px] leading-5 text-forest">
-            Configure <code className="rounded bg-canvas px-1">ADMIN_PASSWORD</code> no ambiente do servidor.
-          </p>
         </div>
       </main>
     );
