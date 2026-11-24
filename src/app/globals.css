@@ -40,6 +40,17 @@ button {
   cursor: pointer;
 }
 
+.search-input {
+  -webkit-tap-highlight-color: transparent;
+  box-shadow: none;
+}
+
+.search-input:focus,
+.search-input:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+
 :focus-visible {
   outline: 3px solid var(--color-forest);
   outline-offset: 3px;

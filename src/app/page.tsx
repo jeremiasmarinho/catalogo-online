@@ -149,7 +149,7 @@ export default function Storefront() {
               event.preventDefault();
               goToCatalogSearch();
             }}
-            className="hidden h-10 max-w-[250px] flex-1 items-center gap-2 rounded-full border border-canvas bg-surface px-4 text-forest focus-within:border-forest lg:flex"
+            className="hidden h-10 max-w-[250px] flex-1 items-center gap-2 rounded-full border border-canvas bg-surface px-4 text-forest lg:flex"
           >
             <Search size={16} aria-hidden="true" />
             <input
@@ -157,7 +157,7 @@ export default function Storefront() {
               onChange={(event) => setSearch(event.target.value)}
               placeholder="Buscar produtos"
               aria-label="Buscar produtos"
-              className="w-full min-w-0 bg-transparent text-sm text-ink outline-none placeholder:text-forest"
+              className="search-input w-full min-w-0 appearance-none border-0 bg-transparent text-sm text-ink outline-none ring-0 placeholder:text-forest"
             />
           </form>
           <nav className="hidden items-center gap-6 text-sm font-medium text-ink md:flex lg:gap-7" aria-label="Navegação principal">
@@ -257,7 +257,7 @@ export default function Storefront() {
               </h2>
               <p className="mt-2 text-sm text-ink">Produtos disponíveis para pedido.</p>
             </div>
-            <label className="flex h-11 w-full items-center gap-2.5 rounded-full border border-canvas bg-surface px-4 text-forest focus-within:border-forest sm:max-w-[270px]">
+            <label className="flex h-11 w-full items-center gap-2.5 rounded-full border border-canvas bg-surface px-4 text-forest sm:max-w-[270px]">
               <Search size={17} aria-hidden="true" />
               <span className="sr-only">Buscar produtos</span>
               <input
@@ -265,7 +265,7 @@ export default function Storefront() {
                 value={search}
                 onChange={(event) => setSearch(event.target.value)}
                 placeholder="Buscar produtos"
-                className="w-full bg-transparent text-sm text-ink outline-none placeholder:text-forest"
+                className="search-input w-full appearance-none border-0 bg-transparent text-sm text-ink outline-none ring-0 placeholder:text-forest"
               />
             </label>
           </div>
