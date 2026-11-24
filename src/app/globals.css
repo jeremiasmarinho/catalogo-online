@@ -1,0 +1,99 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+  --color-action: #32A041;
+  --color-forest: #184E2D;
+  --color-ink: #2D312E;
+  --color-surface: #FFFFFF;
+  --color-canvas: #F4F6F4;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  background: var(--color-surface);
+  color: var(--color-ink);
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: var(--font-inter), Arial, sans-serif;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-forest);
+  outline-offset: 3px;
+}
+
+::selection {
+  background: var(--color-action);
+  color: var(--color-surface);
+}
+
+@layer components {
+  .glass {
+    @apply border-b border-canvas bg-surface/85 backdrop-blur-xl;
+  }
+
+  .surface-card {
+    @apply rounded-2xl border border-canvas bg-surface;
+  }
+
+  .field {
+    @apply h-11 w-full rounded-xl border border-canvas bg-surface px-3 text-sm text-ink outline-none placeholder:text-forest focus:border-forest;
+  }
+
+  .action-primary {
+    @apply flex h-12 items-center justify-center gap-2 rounded-full bg-action px-6 text-[19px] font-bold text-surface transition-colors hover:bg-forest;
+  }
+
+  .action-compact {
+    @apply flex h-11 items-center justify-center gap-2 rounded-full bg-forest px-4 text-sm font-semibold text-surface transition-colors hover:bg-ink;
+  }
+}
+
+.hide-scrollbar {
+  scrollbar-width: none;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.safe-bottom {
+  padding-bottom: max(1.25rem, env(safe-area-inset-bottom));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

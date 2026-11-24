@@ -1,0 +1,35 @@
+{
+  "name": "catalogo-online-white-label",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "prisma generate && next build",
+    "start": "node .next/standalone/server.js",
+    "lint": "eslint .",
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate deploy",
+    "db:migrate:dev": "prisma migrate dev",
+    "db:studio": "prisma studio"
+  },
+  "dependencies": {
+    "@prisma/client": "5.22.0",
+    "lucide-react": "0.468.0",
+    "next": "16.4.6",
+    "prisma": "5.22.0",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "zod": "4.6.7"
+  },
+  "devDependencies": {
+    "@types/node": "22.10.2",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "autoprefixer": "10.4.20",
+    "eslint": "10.15.0",
+    "eslint-config-next": "16.4.6",
+    "postcss": "8.5.33",
+    "tailwindcss": "3.4.17",
+    "typescript": "5.7.2"
+  }
+}

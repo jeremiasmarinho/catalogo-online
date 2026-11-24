@@ -1,0 +1,12 @@
+node_modules
+.next
+out
+coverage
+.env
+.env*.local
+*.log
+*.tsbuildinfo
+prisma/prod.db
+prisma/prod.db-journal
+public/uploads/*
+!public/uploads/.gitkeep

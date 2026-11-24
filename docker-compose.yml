@@ -1,0 +1,16 @@
+services:
+  catalogo:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: "file:./prod.db"
+      NODE_ENV: production
+    volumes:
+      - ./prisma:/app/prisma
+      - ./public/uploads:/app/public/uploads
