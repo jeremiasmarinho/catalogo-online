@@ -2,7 +2,15 @@ import { NextResponse } from "next/server";
 import { STORE_CONFIG } from "@/config/store";
 import { prisma } from "@/lib/prisma";
 import { formatPrice, isAuthorized } from "@/lib/format";
+import {
+  consumeRateLimit,
+  RATE_LIMITS,
+  rateLimitKey,
+  rateLimitResponse,
+} from "@/lib/rate-limit";
 import { orderSchema, orderStatusSchema } from "@/lib/schemas";
+
+export const runtime = "nodejs";
 
 class StockUnavailableError extends Error {}
 
@@ -29,6 +37,13 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
+  const decision = await consumeRateLimit(
+    rateLimitKey(request, "order-create"),
+    RATE_LIMITS.orderCreate.limit,
+    RATE_LIMITS.orderCreate.windowMs,
+  );
+  if (!decision.allowed) return rateLimitResponse(decision);
+
   const parsed = orderSchema.safeParse(await request.json());
   if (!parsed.success) {
     return NextResponse.json({ error: "Confira seus dados e os itens do pedido." }, { status: 400 });

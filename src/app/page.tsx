@@ -232,8 +232,8 @@ export default function Storefront() {
               </div>
             )}
             <div className="absolute bottom-4 left-4 rounded-2xl bg-surface/90 px-4 py-3 shadow-soft backdrop-blur-xl sm:bottom-6 sm:left-6">
-              <p className="text-[10px] font-bold uppercase tracking-[0.13em] text-forest">Feito para você</p>
-              <p className="mt-1 text-sm font-semibold text-ink">Descubra algo especial</p>
+              <p className="text-[10px] font-bold uppercase tracking-[0.13em] text-forest">Para sua loja</p>
+              <p className="mt-1 text-sm font-semibold text-ink">Óculos, armações e perfumes</p>
             </div>
           </div>
         </div>
@@ -241,9 +241,9 @@ export default function Storefront() {
 
       <section aria-label="Diferenciais" className="border-y border-canvas bg-surface">
         <div className="mx-auto grid max-w-7xl gap-4 px-4 py-8 sm:grid-cols-3 sm:px-8">
-          <Advantage icon={PackageCheck} title="Seleção de produtos" description="Um catálogo organizado para você escolher com calma." />
-          <Advantage icon={Headphones} title="Atendimento dedicado" description="Fale com a nossa equipe sobre o seu pedido." />
-          <Advantage icon={MessageCircle} title="Pedido pelo WhatsApp" description="Registre o pedido e finalize a conversa com a loja." />
+          <Advantage icon={PackageCheck} title="Óculos e armações" description="Encontre opções para compor o mix da sua loja." />
+          <Advantage icon={Headphones} title="Perfumes" description="Consulte as opções disponíveis em nosso catálogo." />
+          <Advantage icon={MessageCircle} title="Atendimento pelo WhatsApp" description="Fale com nossa equipe sobre produtos e pedidos." />
         </div>
       </section>
 
@@ -328,7 +328,7 @@ export default function Storefront() {
                     <button type="button" onClick={() => setSelectedProduct(product)} className="block w-full text-left">
                       <h3 className="truncate text-[13px] font-semibold text-ink sm:text-sm">{product.name}</h3>
                       <p className="mt-1 line-clamp-1 text-[11px] text-forest sm:text-xs">
-                        {product.description || "Uma escolha especial para você"}
+                        {product.description || "Consulte os detalhes com nossa equipe."}
                       </p>
                     </button>
                     <StockLabel stock={product.stock} />
@@ -373,14 +373,13 @@ export default function Storefront() {
                 Sobre a Shopomega Brasil
               </h2>
               <p className="mt-3 max-w-2xl text-sm leading-6 text-ink">
-                Reunimos soluções de tecnologia e variedade selecionadas para o seu dia a dia, com
-                atendimento próximo e suporte dedicado do primeiro contato até a entrega do pedido.
-                Nosso compromisso é simples: ajudar você a escolher com calma e comprar com
-                confiança, em todo o Brasil.
+                A Shopomega Brasil é uma distribuidora de óculos, armações e perfumes. Reunimos
+                opções para lojistas que desejam ampliar o mix de produtos. Explore o catálogo e
+                consulte nossa equipe sobre disponibilidade e condições de pedido.
               </p>
               <p className="mt-3 max-w-2xl text-sm leading-6 text-forest">
-                Fale com a nossa equipe para dúvidas sobre produtos, pedidos ou disponibilidade —
-                respondemos pelo WhatsApp.
+                Nossa equipe atende pelo WhatsApp para esclarecer dúvidas sobre os produtos e
+                orientar você no pedido.
               </p>
             </div>
             <div className="flex flex-col gap-3 sm:flex-row lg:flex-col lg:items-start">
@@ -410,6 +409,9 @@ export default function Storefront() {
                 <Instagram size={14} aria-hidden="true" /> Instagram
               </a>
               <a href="/admin" className="w-fit underline underline-offset-4">Acesso do lojista</a>
+              <a href="https://koraforce.com.br" target="_blank" rel="noreferrer" className="w-fit underline underline-offset-4">
+                Desenvolvido por KoraForce
+              </a>
             </div>
           </div>
         </div>
@@ -451,7 +453,7 @@ export default function Storefront() {
                   {selectedProduct.name}
                 </h2>
                 <p className="mt-3 flex-1 text-sm leading-6 text-ink">
-                  {selectedProduct.description || "Uma escolha especial para você."}
+                  {selectedProduct.description || "Consulte os detalhes com nossa equipe."}
                 </p>
                 <StockLabel stock={selectedProduct.stock} />
                 <p className="mt-4 text-xl font-bold text-ink">{formatPrice(selectedProduct.price)}</p>

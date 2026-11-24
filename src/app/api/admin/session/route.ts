@@ -5,6 +5,15 @@ import {
   isAdminSessionValid,
   passwordsMatch,
 } from "@/lib/admin-auth";
+import {
+  consumeRateLimit,
+  RATE_LIMITS,
+  rateLimitKey,
+  rateLimitResponse,
+  resetRateLimit,
+} from "@/lib/rate-limit";
+
+export const runtime = "nodejs";
 
 export async function POST(request: Request) {
   const body = (await request.json().catch(() => null)) as { password?: unknown } | null;
@@ -17,6 +26,14 @@ export async function POST(request: Request) {
     );
   }
 
+  const key = rateLimitKey(request, "login");
+  const decision = await consumeRateLimit(
+    key,
+    RATE_LIMITS.loginFailures.limit,
+    RATE_LIMITS.loginFailures.windowMs,
+  );
+  if (!decision.allowed) return rateLimitResponse(decision);
+
   if (
     typeof body?.password !== "string" ||
     !passwordsMatch(body.password, expected)
@@ -24,6 +41,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Senha incorreta." }, { status: 401 });
   }
 
+  await resetRateLimit(key);
   const response = NextResponse.json({ authenticated: true });
   response.headers.set("Set-Cookie", createSessionCookie(expected));
   return response;

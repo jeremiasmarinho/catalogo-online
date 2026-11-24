@@ -9,19 +9,18 @@ export const BRAND_COLORS = {
 export const STORE_CONFIG = {
   name: "Shopomega Brasil",
   shortName: "Shopomega",
-  tagline: "Tecnologia e variedade com confiança",
+  tagline: "Óculos, armações e perfumes para o seu negócio",
   description:
-    "Soluções selecionadas com entrega ágil e suporte dedicado em todo o Brasil.",
+    "Distribuidora de óculos, armações e perfumes. Explore o catálogo e consulte nossa equipe sobre disponibilidade e condições de pedido.",
   whatsappNumber: "5563999428668",
   instagramUrl: "https://www.instagram.com/lojastylosoficial/",
   currency: "BRL",
   locale: "pt-BR",
-  heroEyebrow: "SHOPOMEGA BRASIL",
-  heroTitle:
-    "A tecnologia e variedade que você procura, com a confiança que você merece.",
+  heroEyebrow: "ÓCULOS • ARMAÇÕES • PERFUMES",
+  heroTitle: "Variedade em óculos, armações e perfumes para a sua loja.",
   heroDescription:
-    "Soluções selecionadas com entrega ágil e suporte dedicado em todo o Brasil.",
-  heroCta: "Conheça Nossos Produtos",
+    "Encontre opções para compor o mix da sua loja. Consulte nossa equipe pelo WhatsApp sobre disponibilidade e condições de pedido.",
+  heroCta: "Explorar catálogo",
   heroImage: "",
   logoUrl: "/logo-shopomega.png",
   logoWhiteUrl: "",

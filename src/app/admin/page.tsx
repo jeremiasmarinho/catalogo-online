@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { upload } from "@vercel/blob/client";
 import { FormEvent, useCallback, useEffect, useState } from "react";
 import {
   AlertCircle,
@@ -27,6 +28,7 @@ import {
   X,
 } from "lucide-react";
 import { BrandLogo } from "@/components/brand-logo";
+import { compressImageInBrowser, validateImageFile } from "@/lib/client-image";
 import { formatPrice } from "@/lib/format";
 
 type Category = { id: string; name: string; _count?: { products: number } };
@@ -72,6 +74,8 @@ export default function AdminPage() {
   const [productStock, setProductStock] = useState("");
   const [productCategory, setProductCategory] = useState("");
   const [productImage, setProductImage] = useState<File | null>(null);
+  const [imageError, setImageError] = useState("");
+  const [processingImage, setProcessingImage] = useState(false);
   const [categoryName, setCategoryName] = useState("");
 
   const request = useCallback(
@@ -172,6 +176,8 @@ export default function AdminPage() {
     setProductStock("");
     setProductCategory("");
     setProductImage(null);
+    setImageError("");
+    setProcessingImage(false);
     setEditingProduct(null);
     setProductFormOpen(false);
   }
@@ -184,22 +190,76 @@ export default function AdminPage() {
     setProductStock(product.stock === null ? "" : String(product.stock));
     setProductCategory(product.category?.id ?? "");
     setProductImage(null);
+    setImageError("");
+    setProcessingImage(false);
     setProductFormOpen(true);
+  }
+
+  async function handleImageChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0] ?? null;
+    setImageError("");
+    if (!file) {
+      setProductImage(null);
+      return;
+    }
+
+    const validationError = validateImageFile(file);
+    if (validationError) {
+      setProductImage(null);
+      event.target.value = "";
+      setImageError(validationError);
+      return;
+    }
+
+    setProcessingImage(true);
+    try {
+      const compressed = await compressImageInBrowser(file);
+      const postValidation = validateImageFile(compressed);
+      if (postValidation) {
+        setProductImage(null);
+        setImageError(postValidation);
+        event.target.value = "";
+        return;
+      }
+      setProductImage(compressed);
+    } catch {
+      setProductImage(file);
+    } finally {
+      setProcessingImage(false);
+    }
   }
 
   async function saveProduct(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (busy || processingImage || imageError) return;
     setBusy(true);
     setError("");
     setNotice("");
+
+    if (productImage) {
+      const validationError = validateImageFile(productImage);
+      if (validationError) {
+        setImageError(validationError);
+        setBusy(false);
+        return;
+      }
+    }
+
     const formData = new FormData();
     formData.set("name", productName);
     formData.set("description", productDescription);
     formData.set("price", String(Math.round(Number(productPrice.replace(",", ".")) * 100)));
     formData.set("stock", productStock);
     if (productCategory) formData.set("categoryId", productCategory);
-    if (productImage) formData.set("image", productImage);
     try {
+      if (productImage) {
+        const blob = await upload(`pending/${crypto.randomUUID()}`, productImage, {
+          access: "private",
+          handleUploadUrl: "/api/upload",
+          contentType: productImage.type,
+        });
+        formData.set("imageKey", blob.pathname);
+      }
       if (editingProduct) {
         formData.set("id", editingProduct.id);
         await request("/api/products", { method: "PATCH", body: formData });
@@ -467,6 +527,8 @@ export default function AdminPage() {
                     setProductStock("");
                     setProductCategory("");
                     setProductImage(null);
+                    setImageError("");
+                    setProcessingImage(false);
                     setProductFormOpen(true);
                   }
                 }}
@@ -506,20 +568,36 @@ export default function AdminPage() {
                       {categories.map((category) => <option key={category.id} value={category.id}>{category.name}</option>)}
                     </select>
                   </label>
-                  <label className="text-xs font-semibold text-ink">
-                    Imagem <span className="font-normal text-forest">(até 5 MB)</span>
+                  <label className="text-xs font-semibold text-ink sm:col-span-2">
+                    Imagem{" "}
+                    <span className="font-normal text-forest">
+                      (JPG, PNG, WEBP ou GIF · original até 20 MB · salvo otimizado até 1 MB)
+                    </span>
                     <span className="mt-1.5 flex h-11 items-center gap-2 rounded-xl border border-canvas px-3 text-sm font-normal text-forest">
                       <Upload size={15} />
                       <span className="min-w-0 flex-1 truncate">
-                        {productImage?.name ?? (editingProduct?.imageUrl ? "Manter imagem atual" : "Escolher arquivo")}
+                        {processingImage
+                          ? "Otimizando imagem..."
+                          : (productImage?.name ?? (editingProduct?.imageUrl ? "Manter imagem atual" : "Escolher arquivo"))}
                       </span>
-                      <input type="file" accept="image/jpeg,image/png,image/webp,image/gif" className="sr-only" onChange={(event) => setProductImage(event.target.files?.[0] ?? null)} />
+                      <input
+                        type="file"
+                        accept="image/jpeg,image/png,image/webp,image/gif"
+                        className="sr-only"
+                        disabled={processingImage}
+                        onChange={(event) => void handleImageChange(event)}
+                      />
                     </span>
+                    {imageError && (
+                      <span role="alert" className="mt-1.5 block text-xs font-normal text-red-700">
+                        {imageError}
+                      </span>
+                    )}
                   </label>
                 </div>
                 <div className="mt-4 flex gap-2">
-                  <button disabled={busy} className="action-compact flex-1 !text-xs disabled:cursor-not-allowed disabled:bg-canvas disabled:text-forest sm:flex-none">
-                    {busy ? <LoaderCircle size={14} className="animate-spin" /> : <Check size={15} />}
+                  <button disabled={busy || processingImage || Boolean(imageError)} className="action-compact flex-1 !text-xs disabled:cursor-not-allowed disabled:bg-canvas disabled:text-forest sm:flex-none">
+                    {busy || processingImage ? <LoaderCircle size={14} className="animate-spin" /> : <Check size={15} />}
                     {editingProduct ? "Salvar alterações" : "Salvar produto"}
                   </button>
                   {editingProduct && (

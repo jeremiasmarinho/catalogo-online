@@ -41,6 +41,14 @@ model Order {
   items         OrderItem[]
 }
 
+model RateLimitEntry {
+  key     String   @id
+  count   Int      @default(1)
+  resetAt DateTime
+
+  @@map("ratelimit")
+}
+
 model OrderItem {
   id        String @id @default(cuid())
   name      String
