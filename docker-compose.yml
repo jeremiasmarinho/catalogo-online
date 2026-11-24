@@ -1,4 +1,21 @@
 services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-catalogo}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Defina POSTGRES_PASSWORD no .env}
+      POSTGRES_DB: ${POSTGRES_DB:-catalogo}
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER:-catalogo} -d $${POSTGRES_DB:-catalogo}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
   catalogo:
     build:
       context: .
@@ -9,8 +26,13 @@ services:
     env_file:
       - .env
     environment:
-      DATABASE_URL: "file:./prod.db"
       NODE_ENV: production
+      DATABASE_URL: ${DATABASE_URL:?Defina DATABASE_URL no .env}
+    depends_on:
+      db:
+        condition: service_healthy
     volumes:
-      - ./prisma:/app/prisma
       - ./public/uploads:/app/public/uploads
+
+volumes:
+  pgdata:
